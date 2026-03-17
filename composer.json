@@ -1,0 +1,23 @@
+{
+    "name": "hexawebsystems/laravel-hexa-package-gnews",
+    "description": "GNews article/news API integration for the Hexa Core framework.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "hexa_package_gnews\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "hexa_package_gnews\\Providers\\GNewsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
