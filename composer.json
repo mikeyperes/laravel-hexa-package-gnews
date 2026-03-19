@@ -1,6 +1,6 @@
 {
     "name": "hexawebsystems/laravel-hexa-package-gnews",
-    "description": "GNews article/news API integration for the Hexa Core framework.",
+    "description": "GNews — article and news API integration for headline fetching, topic search, and content sourcing.",
     "type": "library",
     "license": "proprietary",
     "require": {
