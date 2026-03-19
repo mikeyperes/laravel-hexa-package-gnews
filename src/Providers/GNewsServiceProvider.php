@@ -9,7 +9,7 @@ class GNewsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        ->mergeConfigFrom(__DIR__ . '/../../config/gnews.php', 'gnews');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/gnews.php', 'gnews');
         $this->app->singleton(GNewsService::class);
     }
 
