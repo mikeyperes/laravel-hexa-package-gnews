@@ -42,7 +42,7 @@ class GNewsServiceProvider extends ServiceProvider
     {
         view()->composer('layouts.app', function ($view) {
             if (config('hexa.app_controls_sidebar', false)) return;
-            $view->getFactory()->startPush('sidebar-menu', view('gnews::partials.sidebar-menu')->render());
+            $view->getFactory()->startPush('sidebar-sandbox', view('gnews::partials.sidebar-menu')->render());
         });
 
         view()->composer('settings.index', function ($view) {
