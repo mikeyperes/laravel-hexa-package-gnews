@@ -85,6 +85,11 @@ class GNewsService
                     'published_at' => $a['publishedAt'] ?? null,
                     'source_name' => $a['source']['name'] ?? '',
                     'source_url' => $a['source']['url'] ?? '',
+                    'author' => null,
+                    'categories' => [],
+                    'keywords' => [],
+                    'language' => $lang,
+                    'country' => null,
                 ])->toArray();
 
                 return [
