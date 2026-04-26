@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth', 'locked', 'system_lock', 'two_factor', 'role'])->group(function () {
     // Raw dev view
-    Route::get('/raw-gnews', [GNewsController::class, 'raw'])->name('gnews.index');
+    Route::get('/gnews', [GNewsController::class, 'raw'])->name('gnews.index');
+    Route::get('/raw-gnews', [GNewsController::class, 'raw'])->name('gnews.raw');
 
     // Settings
     Route::get('/settings/gnews', [GNewsController::class, 'settings'])->name('settings.gnews');
