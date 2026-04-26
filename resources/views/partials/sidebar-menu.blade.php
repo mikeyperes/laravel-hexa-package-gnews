@@ -4,7 +4,7 @@
 @endonce
 
 <a href="{{ route('gnews.index') }}"
-   class="flex items-center px-3 py-2 rounded-lg text-sm pl-6 {{ request()->is('raw-gnews*') ? 'sidebar-active' : 'sidebar-hover' }}">
+   class="flex items-center px-3 py-2 rounded-lg text-sm pl-6 {{ request()->is('gnews*') || request()->is('raw-gnews*') ? 'sidebar-active' : 'sidebar-hover' }}">
     GNews
 </a>
 @endif
