@@ -5,6 +5,7 @@ namespace hexa_package_gnews\Providers;
 use Illuminate\Support\ServiceProvider;
 use hexa_package_gnews\Services\GNewsService;
 use hexa_core\Services\PackageRegistryService;
+use hexa_core\Support\PackageAssetRegistry;
 
 /**
  * GNewsServiceProvider — registers GNews package services, routes, views.
@@ -31,6 +32,10 @@ class GNewsServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/../../routes/gnews.php');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'gnews');
+
+        app(PackageAssetRegistry::class)->register("gnews", dirname(__DIR__, 2) . "/resources/js", [
+            "settings.js",
+        ]);
 
         // Sidebar links — registered via PackageRegistryService with auto permission checks
         if (!config('hexa.app_controls_sidebar', false)) {
