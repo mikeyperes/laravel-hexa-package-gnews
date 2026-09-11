@@ -65,7 +65,7 @@ class GNewsService
      * @param  string  $lang  Language code.
      * @return array{success: bool, message: string, data: array|null}
      */
-    public function searchArticles(string $query, int $max = 10, string $lang = 'en'): array
+    public function searchArticles(string $query, int $max = 10, string $lang = 'en', ?string $country = null): array
     {
         $key = $this->getApiKey();
         if (! $key) {
@@ -85,7 +85,20 @@ class GNewsService
                 if (! is_array($data) || ! is_array($data['articles'] ?? null)) {
                     return ['success' => false, 'message' => 'GNews returned an invalid article response.', 'data' => null];
                 }
-                $articles = collect($data['articles'])->filter(static fn ($article): bool => is_array($article))->take(max(1, min($max, 10)))->map(fn ($a) => [
+                $allowedCountries = $this->allowedCountries($country);
+                $articles = collect($data['articles'])
+                    ->filter(static fn ($article): bool => is_array($article))
+                    ->filter(static function (array $article) use ($allowedCountries): bool {
+                        if ($allowedCountries === []) {
+                            return true;
+                        }
+                        $sourceCountry = strtolower(trim((string) ($article['source']['country'] ?? '')));
+
+                        // Keep anything GNews does not label rather than
+                        // discarding a usable story on missing metadata.
+                        return $sourceCountry === '' || in_array($sourceCountry, $allowedCountries, true);
+                    })
+                    ->take(max(1, min($max, 10)))->map(fn ($a) => [
                     'source_api' => 'gnews',
                     'title' => $a['title'] ?? '',
                     'description' => $a['description'] ?? '',
@@ -116,4 +129,28 @@ class GNewsService
             return ['success' => false, 'message' => 'GNews could not be reached securely.', 'data' => null];
         }
     }
+
+    /**
+     * Allowed ISO 3166-1 alpha-2 codes, lowercased.
+     *
+     * GNews' /search endpoint accepts a single `country` value and returns
+     * nothing at all when given a list, so the request stays unconstrained and
+     * results are filtered on the `source.country` GNews reports instead. That
+     * keeps multi-market support without voiding the query.
+     *
+     * @return array<int, string>
+     */
+    private function allowedCountries(?string $country): array
+    {
+        $raw = trim((string) ($country ?? config('gnews.default_country', '')));
+        if ($raw === '') {
+            return [];
+        }
+
+        return array_values(array_filter(array_map(
+            static fn (string $code): string => strtolower(trim($code)),
+            explode(',', $raw)
+        ), static fn (string $code): bool => $code !== ''));
+    }
+
 }
