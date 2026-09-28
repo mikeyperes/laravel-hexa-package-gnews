@@ -5,7 +5,6 @@ namespace hexa_package_gnews\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use hexa_package_gnews\Services\GNewsService;
-use hexa_core\Models\Setting;
 
 /**
  * GNewsController — handles settings, raw view, and API test endpoints.
@@ -30,7 +29,7 @@ class GNewsController extends Controller
     public function settings()
     {
         return view('gnews::settings.index', [
-            'apiKey' => Setting::getValue('gnews_api_key', ''),
+            'apiKey' => app(\hexa_core\Services\CredentialService::class)->getMasked('gnews', 'api_key'),
         ]);
     }
 
@@ -44,7 +43,7 @@ class GNewsController extends Controller
     {
         $request->validate(['api_key' => 'required|string']);
 
-        Setting::setValue('gnews_api_key', $request->input('api_key'));
+        app(\hexa_core\Services\CredentialService::class)->store('gnews', 'api_key', (string) $request->input('api_key'));
 
         return response()->json([
             'success' => true,
